@@ -1,2 +1,2 @@
 # funkcprog
-ELTE - IK funkcionális programozás EA + GY.
+ELTE - IK Funkcionális programozás EA + GY.
