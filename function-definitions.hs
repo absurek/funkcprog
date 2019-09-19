@@ -1,4 +1,4 @@
-Module FunctionDefinitions where
+module FunctionDefinitions where
 
 import Prelude hiding (even, odd)
 
