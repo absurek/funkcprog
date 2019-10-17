@@ -2,7 +2,7 @@
 {- ELTE-IK FunckProg, 6. gyakorlat -}
 
 {- 1. Definiáld a faktoriális függvényt rekurzívan! -}
-fact :: Int -> Int
+fact :: Integer -> Integer
 fact 0 = 0
 fact 1 = 1
 fact n = n * fact (n - 1)
