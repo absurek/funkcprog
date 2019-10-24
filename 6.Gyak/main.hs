@@ -64,21 +64,24 @@ everySecond [] = []
 everySecond [e] = []
 everySecond (e1:e2:rest) = (e2:everySecond rest)
 
-{- 10. Definiáld újra az elem függvényt, mely rekurzívan leellenőrzi, hogy egy elem megtalálható-e egy listában -}
+{- 10. Definiáld újra az elem függvényt, mely rekurzívan leellenőrzi,
+hogy egy elem megtalálható-e egy listában -}
 elem' :: (Eq a) => a -> [a] -> Bool
 elem' _ [] = False
 elem' e (firstElem:rest)
   | e == firstElem = True
   | otherwise = e `elem'` rest
 
-{- 11.Definiálj egy függvényt, mely kikeresi egy kulcs-érték párokból álló listában egy kulcshoz tartozó értéket! Ha a kulcs nem található, adj hibaüzenetet az error függvénnyel! -}
+{- 11.Definiálj egy függvényt, mely kikeresi egy kulcs-érték párokból álló listában
+egy kulcshoz tartozó értéket! Ha a kulcs nem található, adj hibaüzenetet az error függvénnyel! -}
 value :: (Eq keys) => keys -> [(keys, values)] -> values
 value _ [] = error "Key not found in value"
 value key ((k,v):rest)
   | key == k = v
   | otherwise = value key rest
 
-{- 12. Módosítsd a value függvényt, hogy egy alapértelmezett értéket adjon vissza, ha a keresett kulcs nem található a listában! -}
+{- 12. Módosítsd a value függvényt, hogy egy alapértelmezett értéket adjon vissza,
+ha a keresett kulcs nem található a listában! -}
 value' :: (Eq keys) => keys -> values -> [(keys, values)] -> values
 value' _ defaultVal [] = defaultVal
 value' key defaultVal ((k,v):rest)
