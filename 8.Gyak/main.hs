@@ -20,3 +20,15 @@ régióból tevődik össze. Bonts fel egy nyelvazonosítót nyelvre és régió
 hogy jól formázott abemenet. Mindkét rész két-két karakterből áll. -}
 langAndRegion :: String -> (String, String)
 langAndRegion str = (take' 2 str, drop' 3 str)
+
+{- 4. Definiáld újra a zip függvényt! -}
+zip' :: [a] -> [b] -> [(a,b)]
+zip' [] _ = []
+zip' _ [] = []
+zip' (x:xs) (y:ys) = ((x, y):(zip' xs ys))
+
+{- 5. Definiáld újra az unzip függvényt! -}
+unzip' :: [(a, b)] -> ([a], [b])
+unzip' ((x, y):[]) = (x:[], y:[])
+unzip' ((x,y):rest) = ((x:(fst unzipRest)), (y:(snd unzipRest)))
+    where unzipRest = unzip' rest
