@@ -1,3 +1,4 @@
+{- 10. Gyakorlat -}
 import Data.Char
 
 {- 1. Definiáld a map függvényt! -}
@@ -50,3 +51,17 @@ takeWhile' f (x:xs) = if f x then (x:(takeWhile' f xs)) else []
 dropWhile' :: (a -> Bool) -> [a] -> [a]
 dropWhile' _ [] = []
 dropWhile' f (x:xs) = if f x then (dropWhile' f xs) else x:xs
+
+{- 11.Definiálj egy dropWord nevű függvényt, mely eldobja az első szót egy szöveg
+elejéről! -}
+dropWord :: String -> String
+dropWord str = dropWhile (\c -> c /= ' ') str
+
+{- 12. Adott egy felhasználónév, illetve egy adatbázis felhasználókat tároló
+adattáblája, benne felhasználónévvel és jelszóval. Nézd meg, hogy a felhasználónév
+szerepel-e az adattáblában! -}
+users :: [(String, String)]
+users = [ ("mrbean", "4321"), ("admin", "s3cr3t"), ("finn", "algebraic")]
+
+doesUserExist :: String -> [(String, String)] -> Bool
+doesUserExist usrnm usrs = any (\u -> fst u == usrnm) usrs
