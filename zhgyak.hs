@@ -1,5 +1,4 @@
 -- 1. Zh feladatsor --
-
 {- 1. Kettő hatványai (1 pont)
 Definiáljuk az f1 függvényt, amely kiszámolja az n.n. kettőhatványt (ahol nn nemnegatív
 szám)! -}
@@ -115,3 +114,116 @@ f15 str = unwords [ x:[] | x:xs <- words str ]
 Adjuk meg azt a függvényt, amely eldönti egy számról, hogy az négyzetszám-e! -}
 f16 :: Int -> Bool
 f16 n = n `elem` [ x * x | x <- [0..(n + 1) `div` 2]]
+
+-- 2. Zh feladatsor --
+
+{- 1. modDiv (1 pont)
+Add meg két természetes szám egymással vett egész osztásának maradékát, és annak
+eredményét is egy rendezett párban! A pár első komponense legyen a maradék, a második
+pedig az eredmény. -}
+modDiv :: Int -> Int -> (Int,Int)
+modDiv a b = (a `mod` b, a `div` b)
+
+{- 2. swapFirstTwo (1 pont)
+Cseréld meg egy lista első két elemét! Amennyibben a listának nincs legalább két eleme,
+úgy hagyd változatlanul! -}
+swapFirstTwo :: [a] -> [a]
+swapFirstTwo (x:y:xs) = y:x:xs
+swapFirstTwo l = l
+
+{- 3. swapFirstTwos (2 pont)
+Cseréld meg egy listában lévő összes listának az első két elemét! -}
+swapFirstTwos :: [[a]] -> [[a]]
+swapFirstTwos [] = []
+swapFirstTwos (x:xs) = (swapFirstTwo x):(swapFirstTwos xs)
+
+{- 4. isPalindrome (2 pont)
+Döntsd egy listáról, hogy palindrom-e! Egy lista pontosan akkor palindrom, ha
+megegyezik a megfordítottjával. -}
+isPalindrome :: Eq a => [a] -> Bool
+isPalindrome l = l == reverse l
+
+{- 5. palindromize (2 pont)
+Alakíts palindrommá egy listát! Ehhez fűzd össze a megfordítottjával, de olyan módon,
+hogy a "középső" (azaz az eredeti lista utolsó) eleme ne legyen megduplázva (lásd
+tesztek). -}
+palindromize :: [a] -> [a]
+palindromize [] = []
+palindromize l = l ++ reverse' l
+    where reverse' [x] = []
+          reverse' (x:xs) = reverse' xs ++ [x]
+
+{- 6. oddPlusOne (2 pont)
+Definiáljuk az oddPlusOne függvényt, amely egy számokból álló lista összes páros elemét
+eltávolítja, a maradékhoz pedig hozzáad 1-et! -}
+oddPlusOne :: [Int] -> [Int]
+oddPlusOne l = map (+1) (filter odd l)
+
+{- 7. deleteAll (2 pont)
+Töröld egy listából egy adott elem összes előfordulását! -}
+deleteAll :: Eq a => a -> [a] -> [a]
+deleteAll e l = filter (\x -> x /= e) l
+
+{- 8. countEmpties (2 pont)
+Számold meg, hogy hány darab üres lista van egy listában! -}
+countEmpties :: [[a]] -> Int
+countEmpties l = countEmtyLists 0 l
+    where countEmtyLists cnt [] = cnt
+          countEmtyLists cnt (x:xs) = if null x then countEmtyLists (cnt + 1) xs
+                                                else countEmtyLists cnt xs
+
+{- 9. onlyVowels (2 pont)
+Válogasd ki egy String-ből az angol abécé magánhangzóit (e,u,i,o,a)!
+Megjegyzés: Feltételezhetjük, hogy a kapott String-ben kizárólag
+kisbetűk szerepelnek. -}
+onlyVowels :: String -> String
+onlyVowels str = filter (\x -> isVowel x) str
+    where isVowel c = any (\x -> x == c) ['e','u','i','o','a']
+
+{- 10. heads (3 pont)
+Vegyük listában lévő listáknak az első elemeit! Ha egy belső lista üres, akkor ugord
+át! -}
+heads :: [[a]] -> [a]
+heads [] = []
+heads (x:xs) = if null x then heads xs else (head x):(heads xs)
+
+{- 11. conditionalApply (2 pont)
+Valósítsd meg a feltételes applikációt! Az első paramétere egy predikátum (logikai
+értékű függvény), a második pedig az alkalmazandó függvény. Amennyiben a kapott elemre
+igaz a predikátum, akkor alkalmazza rá a függvényt, egyébént adja vissza
+változatlanul. -}
+conditionalApply :: (a -> Bool) -> (a -> a) -> a -> a
+conditionalApply pr f e = if pr e then f e else e
+
+{- 12. conditionalMap (3 pont)
+Valósítsd meg conditionalMap függvényt! Ez a függvény nagyon hasonló a már megszokott
+map függvényhez. Annyiban különbözik tőle, hogy kap egy extra paramétert, egy feltétel
+függvényt. Pontosan akkor fogja alkalmazni a második paraméterként kapott függvényt a
+kapott értékre, ha arra a feltétel függvény igazat ad vissza (egyébként változatlanul
+hagyja). -}
+conditionalMap :: (a -> Bool) -> (a -> a) -> [a] -> [a]
+conditionalMap pr f l = map (conditionalApply pr f) l
+
+{- 13. isWeekend (2 pont)
+Hozz létre egy Day adattípust, mely a hét napjait ábrázolja Mon, Tue, Wed, Thu, Fri,
+Sat, Sun adatkonstruktorokkal! Írj deriving (Eq,Show) záradékot hozzá! -}
+data Day = Mon | Tue | Wed | Thu | Fri | Sat | Sun deriving (Eq, Show)
+
+{- Döntsd egy napról, hogy hétvégére esik-e! -}
+isWeekend :: Day -> Bool
+isWeekend Sat = True
+isWeekend Sun = True
+isWeekend _   = False
+
+{- 14. dayToInt (2 pont)
+Alakíts egész számmá egy napot! A hétfőhöz 0-t, a keddhez 1-et, ... a vasárnaphoz pedig
+6-ot rendeljen. -}
+dayToInt :: Day -> Int
+dayToInt d = snd (findDay d dayIntPairs)
+    where dayIntPairs = zip [Mon, Tue, Wed, Thu, Fri, Sat, Sun] [0..6]
+          findDay d (x:xs) = if fst x == d then x else findDay d xs
+
+{- 15. isEarlier (2 pont)
+Döntsd el egy napról, hogy korábban van-e, mint egy másik! -}
+isEarlier :: Day -> Day -> Bool
+isEarlier d1 d2 = dayToInt d1 < dayToInt d2
