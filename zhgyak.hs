@@ -227,3 +227,158 @@ dayToInt d = snd (findDay d dayIntPairs)
 Döntsd el egy napról, hogy korábban van-e, mint egy másik! -}
 isEarlier :: Day -> Day -> Bool
 isEarlier d1 d2 = dayToInt d1 < dayToInt d2
+
+-- 3. Zh feladatsor --
+import Data.Char
+import Data.List
+
+{- 1. Melyik listában van az elem? (1 pont)
+Adott három lista és egy elem. Döntsd el, melyikben található a keresett elem! Ha egyikben sem, az eredmény 0. -}
+which :: ([Char], [Char], [Char]) -> Char -> Int
+which (a, b, c) e
+    | e `elem` a = 1
+    | e `elem` b = 2
+    | e `elem` c = 3
+    | otherwise  = 0
+
+{- 2. Dominók illeszthetősége (1 pont)
+Állapítsd meg, hogy két dominólap illeszthető-e egymáshoz! Ez akkor áll fenn, ha a
+dominók két oldala közül van, amelyiken azonos számú pont van. Egy dominót a két
+oldalán lévő pontok számával jelölünk. Elég az első dominó jobb oldalát és a második
+bal oldalát összevetni. -}
+matches :: (Int, Int) -> (Int, Int) -> Bool
+matches (_, a) (b, _) = if a == b then True else False
+
+{- 3. Nagybetűsítés (1 pont)
+Alakítsuk nagybetűvé egy szöveg első betűjét! Ha az első karakter nem betű, akkor
+hagyjuk a szöveget változatlanul! -}
+toUpperCase :: String -> String
+toUpperCase [] = []
+toUpperCase (x:xs) = (toUpper x):xs
+
+{- 4. Maybe-csere (1 pont)
+Cserélj ki egy Maybe belsejében lévő értéket egy másikra! A Nothing-ból Nothing lesz. -}
+swap :: Maybe a -> b -> Maybe b
+swap Nothing _ = Nothing
+swap (Just a) b = Just b
+
+{- 5. Fájljogosultságok (2 pont)
+Unix rendszerekben a fájlok engedélyeit szokás szimbolikusan (pl. "rwx") és számszerűen
+(pl. 7) is jelölni.
+
+Valósítsd meg a szimbolikus jelölésről számszerűre konverziót!
+
+Feltesszük, hogy a bemenetben csak 'r', 'w' és 'x' betűk szerepelnek, mindegyik csak
+legfeljebb egyszer.
+
+A betűk tetszőleges sorrendben lehetnek. -}
+numeric :: String -> Int
+numeric [] = 0
+numeric (x:xs) = letterToInt x + numeric xs
+    where letterToInt 'x' = 1
+          letterToInt 'w' = 2
+          letterToInt 'r' = 4
+          letterToInt _   = 0
+
+{- 6. Pitagoraszi számhármasok (2 pont)
+Gyűjtsd egy listába a pitagoraszi számhármasokat! Ezek azok az a, b, c
+számhármasok, melyekre teljesül a^2 + b^2 == c^2.
+Elegendő csak 1 <= a, b, c <= 100 tartományban keresni.
+Az ismétléseket kerüljük: (3, 4, 5) és (4, 3, 5) közül csak az egyik szerepeljen.
+Megjegyzés: a tesztesetben használt sort függvény a Data.List modulból érhető el. -}
+pythagoreans :: [(Int, Int, Int)]
+pythagoreans = [ (a, b, c) | a <- [1..100], b <- [1..100], c <- [1..100],
+                 a^2 + b^2 == c^2, a <= b && b < c ]
+
+{- 7. Van-e hosszú szó? (2 pont)
+Vizsgáld meg, van-e legalább n > 0 betűből álló szó egy szövegben! -}
+hasLongWord :: Int -> String -> Bool
+hasLongWord n str = hasLongWord' n (words str)
+    where hasLongWord' _ []     = False
+          hasLongWord' n (x:xs) = if length x >= n then True else hasLongWord' n xs
+
+{- 8. Minimális szélesség (2 pont)
+Egészíts ki egy szöveget szóközökkel balról megadott hosszúságra! Ha a szöveg eleve
+hosszabb volt a meghatározottnál, ne vágj le belőle! -}
+align :: Int -> String -> String
+align n str = if length str < n then align n (' ':str) else str
+
+{- 9. Fejelem módosítása (2 pont)
+Egy lista első elemét módosítsd egy Maybe-t adó f függvénnyel! Ha f egy Nothing-ot ad,
+töröld a lista első elemét! Ha Just x-et, akkor cseréld le az első elemet x-re! -}
+modify :: (a -> Maybe a) -> [a] -> [a]
+modify _ []     = []
+modify f (x:xs) = if validX xRes then (getNewX xRes):xs else xs
+    where xRes = f x
+          validX Nothing = False
+          validX _       = True
+          getNewX (Just a) = a
+
+{- 10. Hosszabb-e a lista, mint n? (2 pont)
+Írd meg a length egy olyan változatát, mely megvizsgálja, hogy hosszabb-e egy lista,
+mint egy előre megadott n >= 0 méret! -}
+isLonger :: [a] -> Int -> Bool
+isLonger [] _     = False
+isLonger _ 0      = True
+isLonger (x:xs) n = isLonger xs (n - 1)
+
+{- 11. Ékezetes betűk cseréje (3 pont)
+Cseréld ki az ékezetes betűket az ékezet nélküli párjukra! Elegendő csak a kisbetűkkel
+foglalkozni.-}
+removeAccents :: String -> String
+removeAccents [] = []
+removeAccents (x:xs) = (removeAccent x charPairs):(removeAccents xs)
+    where accentedChars    = ['á', 'é', 'í', 'ö', 'ő', 'ú', 'ü', 'ű']
+          nonAccentedChars = ['a', 'e', 'i', 'o', 'o', 'u', 'u', 'u']
+          charPairs = zip accentedChars nonAccentedChars
+          removeAccent c []     = c
+          removeAccent c (x:xs) = if c == fst x then snd x else removeAccent c xs
+
+{- 12. Aláhúzásjelek levágása (2 pont)
+Távolítsd el az aláhúzásjeleket egy szöveg elejéről és végéről! -}
+strip :: String -> String
+strip []  = []
+strip str = stripBack (stripFront str)
+  where stripFront ('_':xs) = stripFront xs
+        stripFront str      = str
+        stripBack str = reverse (stripFront (reverse str))
+
+{- 13. Kő-papír-olló (2 pont)
+Definiálj egy RPS adatszerkezetet a kő-papír-olló játékhoz! Három lehetőség a Rock,
+Paper, Scissors. Kérj legalább egyenlőségvizsgálatot is (deriving (Eq))! -}
+data RPS = Rock | Scissors | Paper deriving (Eq, Show, Enum)
+
+{- Definiálj egy függvényt, mely megmondja, melyik jel melyiket üti! -}
+beats :: RPS -> RPS
+beats Paper = Rock
+beats a = succ a
+
+{- 14. Kő-papír-olló játszma (2 pont)
+Két játékos kő-papír-ollót játszik. Felírják, hogy ki milyen jelet mutatott. Segíts
+nekik megszámolni, hogy az első játékos hányszor nyert!
+
+Feltesszük, hogy mindkét lista azonosan hosszú. -}
+firstBeats :: [RPS] -> [RPS] -> Int
+firstBeats fPlays sPlays = countFBeats 0 (zip fPlays sPlays)
+    where countFBeats n [] = n
+          countFBeats n (x:xs) = if beats (fst x) == (snd x)
+                                 then countFBeats (n + 1) xs
+                                 else countFBeats n xs
+
+{- 15. Hőmérséklet mérése (2 pont)
+
+Definiálj egy Temperature adatszerkezetet a levegőhőmérséklet mérésekhez! A hőmérsékletet mérjük nappal és éjszaka (Daytime és Night). -}
+data Temperature = Daytime Int | Night Int deriving (Show) 
+
+{- Döntsd el egy mérésről, hogy nappal történt-e vagy éjszaka! -}
+isDaytime :: Temperature -> Bool
+isDaytime (Daytime _) = True
+isDaytime _           = False
+
+{- 6. Szélsőséges hőmérsékletek (3 pont)
+Adott egynapi négyóránkénti méréssorozat. Állapítsd meg a legmagasabb nappali, és legalacsonyabb éjszakai hőmérsékletet!-}
+extremes :: [Temperature] -> (Int, Int)
+extremes l = (maximum (map (\(Daytime t) -> t) dayTimeTemps),
+              minimum (map (\(Night t) -> t) nightTimeTemps))
+    where dayTimeTemps = filter (\x -> isDaytime x) l
+          nightTimeTemps = filter (\x -> not (isDaytime x)) l
